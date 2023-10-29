@@ -21,10 +21,10 @@
       <tbody>
         <tr v-for="task in tasks" :key="task.id">
           <td>{{ task.name }}</td>
-          <td>{{ task.deadline }}</td>
+          <td>{{ formattedDate(task.deadline) }}</td>
           <td>{{ task.category.name }}</td>
           <td>{{ task.priority }}</td>
-          <td>{{ task.status }}</td>
+          <td>{{ checkStatus(task.status) }}</td>
           <td>
             <button class="btn" :class="{ 'btn-dark': task.status }" @click="deleteTask(task.id)">
               <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-journal-x" viewBox="0 0 16 16">
@@ -108,13 +108,32 @@ export default {
     }
   },
   computed: {
-    checkStatus(taskStatus) {
-      if (taskStatus == 'notCompleted') {
-        return "Not Completed";
-      } else if (taskStatus == "Completed") {
-        return "Completed"
+    checkStatus() {
+      return function (taskStatus) {
+        if (taskStatus === 'notCompleted') {
+          return 'Not Completed';
+        } else if (taskStatus === 'Completed') {
+          return 'Completed';
+        } else {
+          return 'Unknown Status';
+        }
+      };
+    },
+    formattedDate() {
+    return function (taskDeadline) {
+      if (taskDeadline) {
+        const date = new Date(taskDeadline);
+        if (!isNaN(date)) {
+          const options = { day: 'numeric', month: 'long', year: 'numeric' };
+          return date.toLocaleDateString('en-GB', options);
+        } else {
+          return 'Invalid Date';
+        }
+      } else {
+        return 'No Deadline';
       }
-    }
+    };
+  },
   },
   created() {
     this.fetchTasks();

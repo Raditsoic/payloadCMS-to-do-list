@@ -50,6 +50,7 @@
     },
     methods: {
       async createTask() {
+        console.log(this.date)
         try {
         const req = await fetch('http://localhost:3000/api/task', {
             method: "POST", 
@@ -61,7 +62,7 @@
                 name: this.name,
                 category: this.category,
                 priority: this.priority,
-                date: this.date,
+                deadline: this.date,
                 status: "notCompleted",
             }),
         })
@@ -87,7 +88,7 @@
       }
     },
     mounted() {
-        this.getCategories()
+      this.getCategories()
       document.title = "Create Task"; 
     }
   };
